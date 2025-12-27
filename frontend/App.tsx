@@ -113,12 +113,6 @@ const App: React.FC = () => {
           >
             Dashboard
           </button>
-          <button
-            onClick={() => setView('settings')}
-            className={`nav-menu__item ${view === 'settings' ? 'nav-menu__item--active' : ''}`}
-          >
-            Settings
-          </button>
         </nav>
 
         <div className="nav-actions">
@@ -174,24 +168,11 @@ const App: React.FC = () => {
           <AssignmentList
             assignments={assignments}
             onSelectAssignment={selectAssignment}
+            userName={user?.name}
           />
         )}
       </main>
 
-      <footer className="app-footer">
-        <div className="app-footer__status">
-          <div className="app-footer__indicator">
-            <div className="dot" />
-            System Ready
-          </div>
-          <div>|</div>
-          <div>PostgreSQL 15.2 (Simulated)</div>
-        </div>
-        <div className="app-footer__links">
-          <span>Documentation</span>
-          <span>Privacy Policy</span>
-        </div>
-      </footer>
     </div>
   );
 };

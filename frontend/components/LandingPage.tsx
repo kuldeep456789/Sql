@@ -18,12 +18,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
       <div className="landing-page__grid" />
 
       <div className="landing-page__container">
-        <div className="new-release-badge">
-          <span className="new-release-badge__label">New Release</span>
-          <div className="new-release-badge__dot" />
-          <span className="new-release-badge__text">Gemini 3.0 Integration Live</span>
-        </div>
-
         <h1 className="hero-title">
           Master SQL <br />
           <span>Without Limits.</span>
@@ -49,21 +43,6 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
           >
             Sign In
           </button>
-        </div>
-
-        {/* Stats Section */}
-        <div className="stats-grid">
-          {[
-            { label: 'Users', value: '10k+', color: 'orange' },
-            { label: 'Queries', value: '2.4M', color: 'green' },
-            { label: 'Lessons', value: '450+', color: 'orange' },
-            { label: 'Success Rate', value: '98%', color: 'green' },
-          ].map((stat, i) => (
-            <div key={i} className="stats-grid__item">
-              <div className={`stats-grid__value ${stat.color}`}>{stat.value}</div>
-              <div className="stats-grid__label">{stat.label}</div>
-            </div>
-          ))}
         </div>
       </div>
 

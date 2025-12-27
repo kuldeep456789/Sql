@@ -5,6 +5,7 @@ import { Assignment, Difficulty } from '../types';
 interface AssignmentListProps {
   assignments: Assignment[];
   onSelectAssignment: (id: string) => void;
+  userName?: string;
 }
 
 const DifficultyBadge: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) => {
@@ -15,7 +16,7 @@ const DifficultyBadge: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) =
   );
 };
 
-const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAssignment }) => {
+const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAssignment, userName }) => {
   return (
     <div className="assignment-list">
       <div className="assignment-list__container">
@@ -23,7 +24,7 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
         <div className="welcome-section">
           <div className="max-w-2xl">
             <h2 className="welcome-section__title">
-              Welcome Back, <span>Explorer</span>
+              Welcome Back, <span>{userName || 'Explorer'}</span>
             </h2>
             <p className="welcome-section__text">
               Your current progress is <span>42%</span> complete.

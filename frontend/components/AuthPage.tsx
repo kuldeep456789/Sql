@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 interface AuthPageProps {
-  onLoginSuccess: () => void;
+  onLoginSuccess: (name: string) => void;
   initialMode: 'login' | 'signup';
 }
 
@@ -22,7 +22,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, initialMode }) => {
     // Simulate API delay
     setTimeout(() => {
       setIsLoading(false);
-      onLoginSuccess();
+      onLoginSuccess(formData.name || 'John Smith');
     }, 1500);
   };
 

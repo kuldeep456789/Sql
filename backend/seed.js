@@ -26,17 +26,17 @@ const CONSTANTS_DATA = [
                 tableName: 'users',
                 columns: [
                     { name: 'id', type: 'INTEGER' },
-                    { name: 'first_name', type: 'VARCHAR' },
-                    { name: 'last_name', type: 'VARCHAR' },
+                    { name: 'firstname', type: 'VARCHAR' },
+                    { name: 'lastname', type: 'VARCHAR' },
                     { name: 'email', type: 'VARCHAR' },
                     { name: 'city', type: 'VARCHAR' },
                     { name: 'status', type: 'VARCHAR' }
                 ],
                 sampleData: [
-                    { id: 1, first_name: 'John', last_name: 'Doe', email: 'john@example.com', city: 'London', status: 'active' },
-                    { id: 2, first_name: 'Jane', last_name: 'Smith', email: 'jane@test.org', city: 'New York', status: 'active' },
-                    { id: 3, first_name: 'Alice', last_name: 'Brown', email: 'alice@london.uk', city: 'London', status: 'inactive' },
-                    { id: 4, first_name: 'Bob', last_name: 'Wilson', email: 'bob@corp.com', city: 'London', status: 'active' }
+                    { id: 1, firstname: 'John', lastname: 'Doe', email: 'john@example.com', city: 'London', status: 'active' },
+                    { id: 2, firstname: 'Jane', lastname: 'Smith', email: 'jane@test.org', city: 'New York', status: 'active' },
+                    { id: 3, firstname: 'Alice', lastname: 'Brown', email: 'alice@london.uk', city: 'London', status: 'inactive' },
+                    { id: 4, firstname: 'Bob', lastname: 'Wilson', email: 'bob@corp.com', city: 'London', status: 'active' }
                 ]
             }
         ]
@@ -57,15 +57,15 @@ const CONSTANTS_DATA = [
                 tableName: 'products',
                 columns: [
                     { name: 'id', type: 'INTEGER' },
-                    { name: 'product_name', type: 'VARCHAR' },
+                    { name: 'productname', type: 'VARCHAR' },
                     { name: 'category', type: 'VARCHAR' },
-                    { name: 'stock', type: 'INTEGER' }
+                    { name: 'stockquantity', type: 'INTEGER' }
                 ],
                 sampleData: [
-                    { id: 1, product_name: 'MacBook Pro', category: 'Electronics', stock: 15 },
-                    { id: 2, product_name: 'Office Chair', category: 'Furniture', stock: 5 },
-                    { id: 3, product_name: 'iPhone 15', category: 'Electronics', stock: 45 },
-                    { id: 4, product_name: 'USB-C Cable', category: 'Electronics', stock: 12 }
+                    { id: 1, productname: 'MacBook Pro', category: 'Electronics', stockquantity: 15 },
+                    { id: 2, productname: 'Office Chair', category: 'Furniture', stockquantity: 5 },
+                    { id: 3, productname: 'iPhone 15', category: 'Electronics', stockquantity: 45 },
+                    { id: 4, productname: 'USB-C Cable', category: 'Electronics', stockquantity: 12 }
                 ]
             }
         ]
@@ -76,15 +76,15 @@ const CONSTANTS_DATA = [
         difficulty: 'Intermediate',
         description: 'Find orders that exceed a certain amount to identify top-tier customers.',
         requirements: [
-            'Join the users and orders tables.',
-            'Show the user name and total order amount.',
+            'Join the customers and orders tables.',
+            'Show the customer name and total order amount.',
             'Only show orders where the total is greater than 500.',
             'Order by amount descending.'
         ],
         initialQuery: '-- Start your JOIN query here\nSELECT ',
         schemas: [
             {
-                tableName: 'users',
+                tableName: 'customers',
                 columns: [
                     { name: 'id', type: 'INTEGER' },
                     { name: 'name', type: 'VARCHAR' }
@@ -98,16 +98,16 @@ const CONSTANTS_DATA = [
             {
                 tableName: 'orders',
                 columns: [
-                    { name: 'order_id', type: 'INTEGER' },
-                    { name: 'user_id', type: 'INTEGER' },
+                    { name: 'orderid', type: 'INTEGER' },
+                    { name: 'customerid', type: 'INTEGER' },
                     { name: 'amount', type: 'DECIMAL' },
-                    { name: 'order_date', type: 'DATE' }
+                    { name: 'orderdate', type: 'DATE' }
                 ],
                 sampleData: [
-                    { order_id: 101, user_id: 1, amount: 250.00, order_date: '2023-01-01' },
-                    { order_id: 102, user_id: 1, amount: 600.00, order_date: '2023-01-05' },
-                    { order_id: 103, user_id: 2, amount: 150.00, order_date: '2023-02-10' },
-                    { order_id: 104, user_id: 3, amount: 800.00, order_date: '2023-02-15' }
+                    { orderid: 101, customerid: 1, amount: 250.00, orderdate: '2023-01-01' },
+                    { orderid: 102, customerid: 1, amount: 600.00, orderdate: '2023-01-05' },
+                    { orderid: 103, customerid: 2, amount: 150.00, orderdate: '2023-02-10' },
+                    { orderid: 104, customerid: 3, amount: 800.00, orderdate: '2023-02-15' }
                 ]
             }
         ]
@@ -130,26 +130,26 @@ const CONSTANTS_DATA = [
                 columns: [
                     { name: 'id', type: 'INTEGER' },
                     { name: 'name', type: 'VARCHAR' },
-                    { name: 'dept_id', type: 'INTEGER' },
+                    { name: 'deptid', type: 'INTEGER' },
                     { name: 'score', type: 'INTEGER' }
                 ],
                 sampleData: [
-                    { id: 1, name: 'Sarah Connor', dept_id: 1, score: 10 },
-                    { id: 2, name: 'Kyle Reese', dept_id: 1, score: 8 },
-                    { id: 3, name: 'John Doe', dept_id: 2, score: 9 },
-                    { id: 4, name: 'Agent Smith', dept_id: 3, score: 10 }
+                    { id: 1, name: 'Sarah Connor', deptid: 1, score: 10 },
+                    { id: 2, name: 'Kyle Reese', deptid: 1, score: 8 },
+                    { id: 3, name: 'John Doe', deptid: 2, score: 9 },
+                    { id: 4, name: 'Agent Smith', deptid: 3, score: 10 }
                 ]
             },
             {
                 tableName: 'departments',
                 columns: [
                     { name: 'id', type: 'INTEGER' },
-                    { name: 'dept_name', type: 'VARCHAR' }
+                    { name: 'deptname', type: 'VARCHAR' }
                 ],
                 sampleData: [
-                    { id: 1, dept_name: 'Engineering' },
-                    { id: 2, dept_name: 'Marketing' },
-                    { id: 3, dept_name: 'Internship' }
+                    { id: 1, deptname: 'Engineering' },
+                    { id: 2, deptname: 'Marketing' },
+                    { id: 3, deptname: 'Internship' }
                 ]
             }
         ]

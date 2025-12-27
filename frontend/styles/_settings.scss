@@ -1,0 +1,116 @@
+@use 'variables';
+
+.settings-view {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 4rem;
+    min-height: calc(100vh - 120px);
+}
+
+.settings-card {
+    background: variables.$bg-card;
+    border: 1px solid variables.$border-subtle;
+    border-radius: 1.5rem;
+    width: 100%;
+    max-width: 500px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+
+    &__header {
+        margin-bottom: 2.5rem;
+    }
+
+    &__title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: variables.$text-primary;
+        margin-bottom: 0.5rem;
+    }
+
+    &__subtitle {
+        color: variables.$text-secondary;
+        font-size: 0.875rem;
+    }
+}
+
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    &__group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    &__label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: variables.$text-secondary;
+    }
+
+    &__input {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid variables.$border-subtle;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        color: variables.$text-primary;
+        font-family: inherit;
+        transition: all 0.2s;
+
+        &:focus {
+            outline: none;
+            border-color: variables.$accent-orange;
+            background: rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    &__actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+
+        .btn-primary {
+            flex: 1;
+            background: linear-gradient(135deg, variables.$accent-orange, #ea580c);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+            }
+
+            &:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: transparent;
+            border: 1px solid variables.$border-subtle;
+            color: variables.$text-secondary;
+            padding: 1rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background: rgba(255, 255, 255, 0.05);
+                color: variables.$text-primary;
+            }
+        }
+    }
+}

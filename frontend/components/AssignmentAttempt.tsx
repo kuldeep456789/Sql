@@ -40,14 +40,12 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
     setActiveTab('results');
   }, [assignment]);
 
-  const handleExecute = () => {
+  const handleExecute = async () => {
     setIsExecuting(true);
-    setTimeout(() => {
-      const res = executeQuery(query, assignment.schemas);
-      setResult(res);
-      setActiveTab('results');
-      setIsExecuting(false);
-    }, 400);
+    const res = await executeQuery(query, assignment.schemas);
+    setResult(res);
+    setActiveTab('results');
+    setIsExecuting(false);
   };
 
   const handleGetHint = async () => {
@@ -136,7 +134,7 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
   const themeClasses = getThemeClasses();
   const highlightedCode = Prism.highlight(query, Prism.languages.sql, 'sql');
 
-  const isSuccessful = result && !result.error && result.data.length > 0;
+  const isSuccessful = result && !result.error && result.data && result.data.length > 0;
 
   return (
     <div className={`assignment-attempt ${themeClasses.prismClass}`}>

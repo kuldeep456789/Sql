@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from './services/api';
-import { Assignment } from './types';
+import { Assignment, UserStats } from './types';
 import AssignmentList from './components/AssignmentList';
 import AssignmentAttempt from './components/AssignmentAttempt';
 import LandingPage from './components/LandingPage';
@@ -8,7 +8,7 @@ import AuthPage from './components/AuthPage';
 import ProfileView from './components/ProfileView';
 import SettingsView from './components/SettingsView';
 
-type ViewState = 'landing' | 'auth_login' | 'auth_signup' | 'dashboard' | 'attempt' | 'settings';
+type ViewState = 'landing' | 'auth_login' | 'auth_signup' | 'dashboard' | 'attempt' | 'settings' | 'profile';
 
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('landing');
@@ -21,7 +21,17 @@ const App: React.FC = () => {
     role: 'Free Member',
     email: 'guest@example.com'
   });
+  const [userStats, setUserStats] = useState<UserStats | null>(null);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+
+  const fetchUserStats = async (email: string) => {
+    try {
+      const stats = await api.get(`/user/stats/${email}`);
+      setUserStats(stats);
+    } catch (err) {
+      console.error('Failed to fetch user stats:', err);
+    }
+  };
 
   useEffect(() => {
     // Fetch assignments when app loads (or when entering dashboard)
@@ -41,8 +51,13 @@ const App: React.FC = () => {
   const selectedIndex = assignments.findIndex(a => a.id === selectedAssignmentId);
   const selectedAssignment = selectedIndex !== -1 ? assignments[selectedIndex] : null;
 
-  const handleLoginSuccess = (name: string) => {
-    setUser({ name, role: 'Pro Member', email: `${name.toLowerCase().replace(/\s+/g, '.')}@example.com` });
+  const handleLoginSuccess = (name: string, email: string) => {
+    setUser({
+      name,
+      role: 'Pro Member',
+      email: email || `${name.toLowerCase().replace(/\s+/g, '.')}@example.com`
+    });
+    fetchUserStats(email || `${name.toLowerCase().replace(/\s+/g, '.')}@example.com`);
     setView('dashboard');
   };
 
@@ -73,6 +88,10 @@ const App: React.FC = () => {
   const selectAssignment = (id: string) => {
     setSelectedAssignmentId(id);
     setView('attempt');
+  };
+
+  const handleAssignmentComplete = () => {
+    if (user?.email) fetchUserStats(user.email);
   };
 
   const backToDashboard = () => {
@@ -133,6 +152,9 @@ const App: React.FC = () => {
 
             {showProfileDropdown && (
               <div className="profile-dropdown">
+                <button className="profile-dropdown__item" onClick={() => { setView('profile'); setShowProfileDropdown(false); }}>
+                  View Profile
+                </button>
                 <button className="profile-dropdown__item" onClick={() => { setView('settings'); setShowProfileDropdown(false); }}>
                   Settings
                 </button>
@@ -157,6 +179,13 @@ const App: React.FC = () => {
             onBack={backToDashboard}
             onNext={handleNextAssignment}
             isLast={selectedIndex === assignments.length - 1}
+            userEmail={user?.email}
+          />
+        ) : view === 'profile' ? (
+          <ProfileView
+            user={{ ...user!, role: userStats?.rank || user!.role }}
+            stats={userStats}
+            onBack={backToDashboard}
           />
         ) : view === 'settings' ? (
           <SettingsView
@@ -169,6 +198,7 @@ const App: React.FC = () => {
             assignments={assignments}
             onSelectAssignment={selectAssignment}
             userName={user?.name}
+            stats={userStats}
           />
         )}
       </main>

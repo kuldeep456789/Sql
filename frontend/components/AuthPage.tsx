@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 interface AuthPageProps {
-  onLoginSuccess: (name: string) => void;
+  onLoginSuccess: (name: string, email: string) => void;
   initialMode: 'login' | 'signup';
 }
 
@@ -19,11 +19,12 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, initialMode }) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate API delay
+    // In a real app, this would be an API call to /api/auth/login or /api/auth/register
+    // For now, we simulate the success redirect with the entered data
     setTimeout(() => {
       setIsLoading(false);
-      onLoginSuccess(formData.name || 'John Smith');
-    }, 1500);
+      onLoginSuccess(formData.name || 'User', formData.email);
+    }, 1000);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

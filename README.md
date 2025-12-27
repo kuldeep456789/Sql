@@ -1,20 +1,84 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# CiphersSQLStudio 🚀
 
-# Run and deploy your AI Studio app
+A browser-based SQL learning platform where students can practice SQL queries against pre-configured assignments with real-time execution and intelligent AI-powered hints.
 
-This contains everything you need to run your app locally.
+## 🌟 Key Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/13zdPRh8RVGXiHPyoH0rt5Q9Q01J8wJE0
+- **Interactive SQL Editor**: Industry-standard code editing experience powered by **Monaco Editor**.
+- **Real-time Execution**: Instant feedback with formatted results directly from a PostgreSQL sandbox.
+- **Intelligent Hints**: AI-driven tutor guidance (via Gemini API) that provides conceptual hints without giving away solutions.
+- **Progress Tracking**: Automatic persistence of user query attempts to track learning progress.
+- **Personalized Experience**: Full authentication system with dedicated user dashboards.
 
-## Run Locally
+## 📊 Data-Flow Diagram
 
-**Prerequisites:**  Node.js
+```mermaid
+graph TD
+    A[User/Student] -->|Writes SQL Query| B(Monaco Editor)
+    B -->|Execute Query| C{Frontend App}
+    C -->|API Request| D[Express Backend]
+    D -->|Sanitize & Validate| E{PostgreSQL Pool}
+    E -->|Execute| F[(Neon Database)]
+    F -->|Return Rows| E
+    E -->|Success/Error| D
+    D -->|Save Attempt| F
+    D -->|JSON Response| C
+    C -->|Render Results| G[Results Table]
+    
+    A -->|Request Hint| H[Tutor Advice]
+    H -->|Prompt Context| I[Gemini AI Engine]
+    I -->|Intelligent Guide| H
+    H -->|Display Hint| A
+```
 
+## 🛠️ Tech Stack
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+### Frontend
+- **React.js**: Core UI library.
+- **SCSS**: Modular, mobile-first styling following BEM conventions.
+- **Monaco Editor**: Professional-grade SQL editing.
+- **Vite**: Ultra-fast build tool and dev server.
+
+### Backend
+- **Node.js / Express**: Robust server-side logic and RESTful API.
+- **PostgreSQL**: Reliable relational database (Neon).
+- **Gemini AI**: intelligent tutoring through LLM integration.
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v18+)
+- PostgreSQL Database (Neon.tech recommended)
+
+### Installation
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/kuldeep456789/Sql.git
+   cd Sql
+   ```
+
+2. **Backend Setup**:
+   ```bash
+   cd backend
+   npm install
+   # Create a .env file with:
+   # PORT=3000
+   # DATABASE_URL=your_postgres_url
+   # GEMINI_API_KEY=your_gemini_key
+   node seed.js  # Initialize database and sample data
+   npm start
+   ```
+
+3. **Frontend Setup**:
+   ```bash
+   cd ../frontend
+   npm install
+   npm run dev
+   ```
+
+## 🎨 UI/UX Rationale
+The application follows a "Modern Dark" aesthetic to reduce eye strain during long coding sessions. The workspace is split into a instructions sidebar and a resizable editor/results area, maximizing focus on the core task: writing and testing SQL queries.
+
+---
+Built with ❤️ for SQL Students.

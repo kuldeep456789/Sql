@@ -1,17 +1,23 @@
 import React from 'react';
-import { Assignment } from '../types';
+import { Assignment, UserStats } from '../types';
 
 interface ProfileViewProps {
     onBack: () => void;
-    user: { name: string; role: string } | null;
+    user: { name: string; role: string; email: string } | null;
+    stats?: UserStats | null;
 }
 
-const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user }) => {
-    // Simulated data for the heatmap
-    const days = Array.from({ length: 365 }, (_, i) => ({
-        date: new Date(Date.now() - (364 - i) * 24 * 60 * 60 * 1000),
-        count: Math.floor(Math.random() * 5),
-    }));
+const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user, stats }) => {
+    // Generate actual heatmap data based on user history
+    const days = Array.from({ length: 365 }, (_, i) => {
+        const date = new Date(Date.now() - (364 - i) * 24 * 60 * 60 * 1000);
+        const dateStr = date.toISOString().split('T')[0];
+        const activity = stats?.history.find((h: any) => h.date.split('T')[0] === dateStr);
+        return {
+            date,
+            count: activity ? parseInt(activity.count as any) : 0,
+        };
+    });
 
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -28,8 +34,8 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user }) => {
                             <h1 className="profile-header__name">{user?.name || 'Guest'}</h1>
                             <p className="profile-header__handle">@{user?.name?.toLowerCase().replace(/\s+/g, '') || 'guest'}_sql</p>
                             <div className="profile-header__badges">
-                                <span className="badge badge--orange">{user?.role || 'Free Member'}</span>
-                                <span className="badge badge--blue">SQL Ninja</span>
+                                <span className="badge badge--orange">{stats?.rank || user?.role || 'Free Member'}</span>
+                                <span className="badge badge--blue">{stats && stats.xp > 5000 ? 'Deep Sea Diver' : stats && stats.xp > 1000 ? 'SQL Ninja' : 'Explorer'}</span>
                             </div>
                         </div>
                     </div>
@@ -42,23 +48,23 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user }) => {
                 <div className="profile-stats">
                     <div className="stat-card">
                         <div className="stat-card__label">Problems Solved</div>
-                        <div className="stat-card__value">142</div>
-                        <div className="stat-card__sub">Top 5% this month</div>
+                        <div className="stat-card__value">{stats?.solvedCount || 0}</div>
+                        <div className="stat-card__sub">Out of {stats?.solvedCount || 0} attempts</div>
                     </div>
                     <div className="stat-card">
                         <div className="stat-card__label">Current Streak</div>
-                        <div className="stat-card__value stat-card__value--orange">12 Days</div>
-                        <div className="stat-card__sub">Personal Best: 24</div>
+                        <div className="stat-card__value stat-card__value--orange">{stats?.streak || 0} Days</div>
+                        <div className="stat-card__sub">Activity Days</div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-card__label">Global Rank</div>
-                        <div className="stat-card__value stat-card__value--green">#1,240</div>
-                        <div className="stat-card__sub">Out of 45k users</div>
+                        <div className="stat-card__label">XP Earned</div>
+                        <div className="stat-card__value stat-card__value--green">{stats?.xp.toLocaleString() || 0}</div>
+                        <div className="stat-card__sub">Leveling up!</div>
                     </div>
                     <div className="stat-card">
                         <div className="stat-card__label">Skill Level</div>
-                        <div className="stat-card__value">Advanced</div>
-                        <div className="stat-card__sub">Mastered 8 topics</div>
+                        <div className="stat-card__value">{stats?.rank || 'Beginner'}</div>
+                        <div className="stat-card__sub">Knowledge Base</div>
                     </div>
                 </div>
 
@@ -73,7 +79,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user }) => {
                             {days.map((day, i) => (
                                 <div
                                     key={i}
-                                    className={`heatmap-cell intensity-${day.count}`}
+                                    className={`heatmap-cell intensity-${day.count > 4 ? 4 : day.count}`}
                                     title={`${day.date.toDateString()}: ${day.count} submissions`}
                                 />
                             ))}

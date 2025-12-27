@@ -1,11 +1,12 @@
 
 import React from 'react';
-import { Assignment, Difficulty } from '../types';
+import { Assignment, Difficulty, UserStats } from '../types';
 
 interface AssignmentListProps {
   assignments: Assignment[];
   onSelectAssignment: (id: string) => void;
   userName?: string;
+  stats?: UserStats | null;
 }
 
 const DifficultyBadge: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) => {
@@ -16,7 +17,7 @@ const DifficultyBadge: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) =
   );
 };
 
-const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAssignment, userName }) => {
+const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAssignment, userName, stats }) => {
   return (
     <div className="assignment-list">
       <div className="assignment-list__container">
@@ -27,7 +28,7 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
               Welcome Back, <span>{userName || 'Explorer'}</span>
             </h2>
             <p className="welcome-section__text">
-              Your current progress is <span>42%</span> complete.
+              Your current progress is <span>{stats?.progress || 0}%</span> complete.
               Continue where you left off or start a new challenge below.
             </p>
           </div>
@@ -35,11 +36,11 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
           <div className="welcome-section__stats">
             <div className="stat-card">
               <span className="stat-card__label">XP Points</span>
-              <span className="stat-card__value stat-card__value--orange">12,450</span>
+              <span className="stat-card__value stat-card__value--orange">{stats?.xp.toLocaleString() || 0}</span>
             </div>
             <div className="stat-card">
               <span className="stat-card__label">Rank</span>
-              <span className="stat-card__value stat-card__value--green">Novice II</span>
+              <span className="stat-card__value stat-card__value--green">{stats?.rank || 'Novice I'}</span>
             </div>
           </div>
         </div>

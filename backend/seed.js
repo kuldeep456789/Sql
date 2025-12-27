@@ -179,6 +179,24 @@ async function seed() {
                     END
                 ) STORED
             );
+
+            CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL,
+                role TEXT DEFAULT 'Free Member',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS attempts (
+                id SERIAL PRIMARY KEY,
+                user_email TEXT NOT NULL,
+                assignment_id TEXT NOT NULL,
+                query TEXT NOT NULL,
+                is_success BOOLEAN DEFAULT false,
+                executed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
         `);
         console.log('Table assignments created/verified.');
 

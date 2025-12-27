@@ -2,10 +2,14 @@ import { QueryResult, TableSchema } from '../types';
 import { api } from './api';
 
 
-export const executeQuery = async (query: string, schemas: TableSchema[]): Promise<QueryResult> => {
+export const executeQuery = async (query: string, schemas: TableSchema[], userEmail?: string, assignmentId?: string): Promise<QueryResult> => {
   const startTime = performance.now();
   try {
-    const result = await api.post('/execute', { sql: query });
+    const result = await api.post('/execute', {
+      sql: query,
+      user_email: userEmail,
+      assignment_id: assignmentId
+    });
 
     // Transform backend result to frontend QueryResult format
     // Backend returns { rows: [], rowCount: number }

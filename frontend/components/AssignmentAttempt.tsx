@@ -1,35 +1,32 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Assignment, QueryResult } from '../types';
 import { executeQuery } from '../services/dbService';
 import { getSqlHint } from '../services/geminiService';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-sql';
+import Editor from '@monaco-editor/react';
 
 interface AssignmentAttemptProps {
   assignment: Assignment;
   onBack: () => void;
   onNext?: () => void;
   isLast?: boolean;
+  userEmail?: string;
 }
 
-type EditorTheme = 'cyberpunk' | 'amber' | 'emerald';
+type EditorTheme = 'vs-dark' | 'light' | 'hc-black';
 
-const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBack, onNext, isLast }) => {
+const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBack, onNext, isLast, userEmail }) => {
   const [query, setQuery] = useState(assignment.initialQuery || '');
   const [result, setResult] = useState<QueryResult | null>(null);
   const [activeTab, setActiveTab] = useState<'schema' | 'results'>('results');
   const [hint, setHint] = useState<string | null>(null);
   const [isGettingHint, setIsGettingHint] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
-  const [editorTheme, setEditorTheme] = useState<EditorTheme>('cyberpunk');
+  const [editorTheme, setEditorTheme] = useState<EditorTheme>('vs-dark');
 
   // Resizing state
   const [resultsHeight, setResultsHeight] = useState(40); // Initial 40% height for results
   const [isResizing, setIsResizing] = useState(false);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const preRef = useRef<HTMLPreElement>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
 
   // Reset state when assignment changes
@@ -42,7 +39,7 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
 
   const handleExecute = async () => {
     setIsExecuting(true);
-    const res = await executeQuery(query, assignment.schemas);
+    const res = await executeQuery(query, assignment.schemas, userEmail, assignment.id);
     setResult(res);
     setActiveTab('results');
     setIsExecuting(false);
@@ -53,14 +50,6 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
     const h = await getSqlHint(assignment, query);
     setHint(h);
     setIsGettingHint(false);
-  };
-
-  // Sync scrolling between textarea and pre
-  const handleScroll = () => {
-    if (textareaRef.current && preRef.current) {
-      preRef.current.scrollTop = textareaRef.current.scrollTop;
-      preRef.current.scrollLeft = textareaRef.current.scrollLeft;
-    }
   };
 
   // Resize logic
@@ -102,42 +91,10 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
     };
   }, [isResizing, resize, stopResizing]);
 
-  const getThemeClasses = () => {
-    switch (editorTheme) {
-      case 'amber':
-        return {
-          bg: 'bg-[#120d0a]',
-          text: 'text-orange-400',
-          lineNumbers: 'bg-[#1a1410] text-orange-900',
-          border: 'border-orange-500/20',
-          prismClass: 'theme-amber'
-        };
-      case 'emerald':
-        return {
-          bg: 'bg-[#0a120d]',
-          text: 'text-green-400',
-          lineNumbers: 'bg-[#101a14] text-green-900',
-          border: 'border-green-500/20',
-          prismClass: 'theme-emerald'
-        };
-      default:
-        return {
-          bg: 'bg-black',
-          text: 'text-green-400',
-          lineNumbers: 'bg-slate-900 text-slate-700',
-          border: 'border-white/5',
-          prismClass: 'theme-cyberpunk'
-        };
-    }
-  };
-
-  const themeClasses = getThemeClasses();
-  const highlightedCode = Prism.highlight(query, Prism.languages.sql, 'sql');
-
   const isSuccessful = result && !result.error && result.data && result.data.length > 0;
 
   return (
-    <div className={`assignment-attempt ${themeClasses.prismClass}`}>
+    <div className="assignment-attempt">
       {/* Sidebar: Instructions */}
       <div className="sidebar">
         <div className="sidebar__header">
@@ -207,13 +164,14 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
               </div>
 
               <div className="editor-toolbar__theme-toggles">
-                {(['cyberpunk', 'amber', 'emerald'] as EditorTheme[]).map((t) => (
+                {([['vs-dark', 'Dark'], ['light', 'Light'], ['hc-black', 'High Contrast']] as const).map(([t, label]) => (
                   <button
                     key={t}
                     onClick={() => setEditorTheme(t)}
                     className={editorTheme === t ? 'active' : ''}
+                    title={label}
                   >
-                    {t}
+                    {label}
                   </button>
                 ))}
               </div>
@@ -245,28 +203,22 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
             </div>
           </div>
 
-          <div className="editor-area">
-            <div className="editor-area__gutters">
-              {[...Array(50)].map((_, i) => <div key={i} className="h-6 leading-6">{i + 1}</div>)}
-            </div>
-            <div className="editor-area__input">
-              <textarea
-                ref={textareaRef}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onScroll={handleScroll}
-                spellCheck={false}
-                className="prism-editor-textarea"
-                placeholder="-- Start writing your SQL query..."
-              />
-              <pre
-                ref={preRef}
-                className="prism-editor-pre language-sql"
-                aria-hidden="true"
-              >
-                <code dangerouslySetInnerHTML={{ __html: highlightedCode + '\n' }} />
-              </pre>
-            </div>
+          <div className="editor-area" style={{ height: '100%', padding: '0' }}>
+            <Editor
+              height="100%"
+              defaultLanguage="sql"
+              theme={editorTheme}
+              value={query}
+              onChange={(value) => setQuery(value || '')}
+              options={{
+                fontSize: 14,
+                minimap: { enabled: false },
+                scrollBeyondLastLine: false,
+                lineNumbers: 'on',
+                automaticLayout: true,
+                padding: { top: 16, bottom: 16 }
+              }}
+            />
           </div>
         </div>
 

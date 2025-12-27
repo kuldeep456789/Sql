@@ -160,7 +160,6 @@ async function seed() {
     try {
         console.log('Starting seed...');
 
-        // 1. Create table
         await pool.query(`
             CREATE TABLE IF NOT EXISTS assignments (
                 id TEXT PRIMARY KEY,
@@ -200,11 +199,9 @@ async function seed() {
         `);
         console.log('Table assignments created/verified.');
 
-        // 2. Clear existing data
         await pool.query('DELETE FROM assignments');
         console.log('Cleared existing data.');
 
-        // 3. Insert data
         for (const assignment of CONSTANTS_DATA) {
             await pool.query(
                 `INSERT INTO assignments (id, title, difficulty, description, requirements, initial_query, schemas)
@@ -222,21 +219,13 @@ async function seed() {
         }
         console.log(`Inserted ${CONSTANTS_DATA.length} assignments.`);
 
-
-        // 4. Create actual tables for sandbox simulation (Optional but good for realism if using real DB for queries)
-        // For now, the "execute" endpoint might just run queries. If we want them to actually work, we need these tables in the DB too.
-        // Let's create the tables defined in schemas.
-
         for (const assignment of CONSTANTS_DATA) {
             for (const schema of assignment.schemas) {
-                // Drop table if exists to reset
                 await pool.query(`DROP TABLE IF EXISTS ${schema.tableName} CASCADE`);
 
-                // Create table
                 const cols = schema.columns.map(c => `${c.name} ${c.type}`).join(', ');
                 await pool.query(`CREATE TABLE ${schema.tableName} (${cols})`);
 
-                // Insert sample data
                 if (schema.sampleData.length > 0) {
                     const keys = Object.keys(schema.sampleData[0]).join(', ');
                     for (const row of schema.sampleData) {

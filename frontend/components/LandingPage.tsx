@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface LandingPageProps {
@@ -9,12 +8,10 @@ interface LandingPageProps {
 const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
   return (
     <div className="landing-page">
-      {/* Dynamic Background Elements */}
       <div className="landing-page__bg-orange" />
       <div className="landing-page__bg-green" />
       <div className="landing-page__noise" />
 
-      {/* Grid Pattern */}
       <div className="landing-page__grid" />
 
       <div className="landing-page__container">
@@ -46,12 +43,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
         </div>
       </div>
 
-      {/* Floating Elements */}
       <div className="landing-page__float-1" />
       <div className="landing-page__float-2" />
     </div>
   );
 };
-
 
 export default LandingPage;

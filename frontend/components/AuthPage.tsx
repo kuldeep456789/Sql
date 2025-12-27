@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 interface AuthPageProps {
@@ -19,8 +18,6 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, initialMode }) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // In a real app, this would be an API call to /api/auth/login or /api/auth/register
-    // For now, we simulate the success redirect with the entered data
     setTimeout(() => {
       setIsLoading(false);
       onLoginSuccess(formData.name || 'User', formData.email);
@@ -33,13 +30,11 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, initialMode }) => {
 
   return (
     <div className="auth-page">
-      {/* Background Decor */}
       <div className="auth-page__bg-orange" />
       <div className="auth-page__bg-green" />
 
       <div className="auth-page__container">
         <div className="auth-card">
-          {/* Logo */}
           <div className="auth-card__header">
             <div className="auth-card__logo">
               C

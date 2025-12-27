@@ -13,7 +13,6 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-// Layout
 .app-container {
     min-height: 100vh;
     display: flex;
@@ -25,7 +24,6 @@ body {
     transition: background-color 0.3s ease;
 }
 
-// Header
 .app-header {
     @include base.glass-panel;
     height: 4.5rem;
@@ -87,7 +85,7 @@ body {
     }
 
     &__item {
-        font-size: 0.625rem; // 10px
+        font-size: 0.625rem;
         font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 0.1em;
@@ -170,7 +168,7 @@ body {
         display: none;
 
         @media (min-width: 1024px) {
-            display: block; // lg:block
+            display: block;
         }
     }
 
@@ -202,7 +200,7 @@ body {
         span {
             font-size: 0.75rem;
             font-weight: 700;
-            color: #fb923c; // orange-400
+            color: #fb923c;
         }
     }
 }
@@ -255,14 +253,12 @@ body {
     }
 }
 
-// Main
 .app-main {
     flex: 1;
     overflow: hidden;
     position: relative;
 }
 
-// Background Effects
 .bg-glow {
     position: absolute;
     width: 40%;
@@ -284,7 +280,6 @@ body {
     }
 }
 
-// Footer
 .app-footer {
     height: 2.5rem;
     border-top: 1px solid variables.$border-subtle;

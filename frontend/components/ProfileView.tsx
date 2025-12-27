@@ -8,7 +8,6 @@ interface ProfileViewProps {
 }
 
 const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user, stats }) => {
-    // Generate actual heatmap data based on user history
     const days = Array.from({ length: 365 }, (_, i) => {
         const date = new Date(Date.now() - (364 - i) * 24 * 60 * 60 * 1000);
         const dateStr = date.toISOString().split('T')[0];
@@ -24,7 +23,6 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user, stats }) => {
     return (
         <div className="profile-view">
             <div className="profile-view__container">
-                {/* Profile Header */}
                 <div className="profile-header">
                     <div className="profile-header__main">
                         <div className="profile-header__avatar">
@@ -44,7 +42,6 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user, stats }) => {
                     </button>
                 </div>
 
-                {/* Stats Grid */}
                 <div className="profile-stats">
                     <div className="stat-card">
                         <div className="stat-card__label">Problems Solved</div>
@@ -68,7 +65,6 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user, stats }) => {
                     </div>
                 </div>
 
-                {/* Activity Heatmap */}
                 <div className="activity-section">
                     <h2 className="section-title">Submission Activity</h2>
                     <div className="heatmap-container">
@@ -98,7 +94,6 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onBack, user, stats }) => {
                     </div>
                 </div>
 
-                {/* Recent Achievements */}
                 <div className="achievements-section">
                     <h2 className="section-title">Recent Achievements</h2>
                     <div className="achievements-grid">

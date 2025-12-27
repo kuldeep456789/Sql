@@ -24,7 +24,6 @@
     --border-subtle: rgba(15, 23, 42, 0.1);
 }
 
-// Colors
 $bg-dark: var(--bg-dark);
 $bg-panel: var(--bg-panel);
 $bg-card: var(--bg-card);
@@ -41,17 +40,14 @@ $accent-white: var(--accent-white);
 
 $border-subtle: var(--border-subtle);
 
-// Fonts
 $font-family-base: 'Inter', sans-serif;
 $font-family-sans: 'Inter', sans-serif;
 $font-family-mono: 'Fira Code', monospace;
 
-// Spacing
 $spacing-xs: 0.25rem;
 $spacing-sm: 0.5rem;
 $spacing-md: 1rem;
 $spacing-lg: 1.5rem;
 $spacing-xl: 2rem;
 
-// Z-index
 $z-header: 50;

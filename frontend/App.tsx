@@ -35,7 +35,6 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    // Fetch assignments when app loads (or when entering dashboard)
     const fetchAssignments = async () => {
       try {
         const data = await api.get('/assignments');
@@ -100,7 +99,6 @@ const App: React.FC = () => {
     setView('dashboard');
   };
 
-  // Render Logic
   if (view === 'landing') {
     return <LandingPage
       onLogin={() => setView('auth_login')}
@@ -117,7 +115,6 @@ const App: React.FC = () => {
 
   return (
     <div className={`app-container ${theme === 'light' ? 'light-mode' : ''}`}>
-      {/* Header */}
       <header className="app-header">
         <div className="app-header__brand" onClick={backToDashboard}>
           <div className="app-header__logo">C</div>
@@ -170,7 +167,6 @@ const App: React.FC = () => {
       </header>
 
       <main className="app-main">
-        {/* Background Glows */}
         <div className="bg-glow bg-glow--orange" />
         <div className="bg-glow bg-glow--green" />
 

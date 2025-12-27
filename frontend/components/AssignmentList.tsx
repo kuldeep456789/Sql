@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Assignment, Difficulty, UserStats } from '../types';
 
@@ -21,7 +20,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
   return (
     <div className="assignment-list">
       <div className="assignment-list__container">
-        {/* Welcome Section */}
         <div className="welcome-section">
           <div className="max-w-2xl">
             <h2 className="welcome-section__title">
@@ -45,7 +43,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
           </div>
         </div>
 
-        {/* Section Header */}
         <div className="section-header">
           <h3 className="section-header__title">Core Curriculum</h3>
           <div className="section-header__actions">
@@ -55,7 +52,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
           </div>
         </div>
 
-        {/* Grid */}
         <div className="assignment-grid">
           {assignments.map((assignment) => (
             <div
@@ -63,7 +59,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
               onClick={() => onSelectAssignment(assignment.id)}
               className="assignment-card group"
             >
-              {/* Card Hover Decoration */}
               <div className="assignment-card__glow" />
 
               <div className="assignment-card__header">
@@ -96,7 +91,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
             </div>
           ))}
 
-          {/* Coming Soon Card */}
           <div className="coming-soon-card">
             <div className="coming-soon-card__icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
@@ -109,6 +103,5 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
     </div>
   );
 };
-
 
 export default AssignmentList;

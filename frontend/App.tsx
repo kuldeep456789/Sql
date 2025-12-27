@@ -26,7 +26,8 @@ const App: React.FC = () => {
 
   const fetchUserStats = async (email: string) => {
     try {
-      const stats = await api.get(`/user/stats/${email}`);
+      const cleanEmail = email.trim();
+      const stats = await api.get(`/user/stats/${cleanEmail}`);
       setUserStats(stats);
     } catch (err) {
       console.error('Failed to fetch user stats:', err);

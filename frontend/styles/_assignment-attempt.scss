@@ -1,0 +1,492 @@
+@use 'variables' as *;
+@use 'base' as *;
+
+.assignment-attempt {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: $bg-dark;
+
+    @media (min-width: 768px) {
+        flex-direction: row;
+    }
+
+    &.theme-cyberpunk {
+        --editor-bg: #000000;
+        --editor-text: #4ade80;
+    }
+
+    &.theme-amber {
+        --editor-bg: #120d0a;
+        --editor-text: #fb923c;
+    }
+
+    &.theme-emerald {
+        --editor-bg: #0a120d;
+        --editor-text: #34d399;
+    }
+}
+
+// Sidebar
+.sidebar {
+    width: 100%;
+    border-right: 1px solid $border-subtle;
+    display: flex;
+    flex-direction: column;
+    background: rgba(2, 6, 23, 0.5);
+    backdrop-filter: blur(12px);
+
+    @media (min-width: 768px) {
+        width: 320px;
+    }
+
+    @media (min-width: 1024px) {
+        width: 400px;
+    }
+
+    &__header {
+        padding: $spacing-md;
+        border-bottom: 1px solid $border-subtle;
+        @include flex-between;
+    }
+
+    &__exit-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: $text-secondary;
+
+        &:hover {
+            color: $text-primary;
+        }
+    }
+
+    &__status-badge {
+        font-size: 0.625rem;
+        font-weight: 700;
+        color: $accent-orange;
+        background: rgba($accent-orange, 0.1);
+        padding: 0.125rem 0.5rem;
+        border-radius: 0.25rem;
+        border: 1px solid rgba($accent-orange, 0.2);
+        text-transform: uppercase;
+    }
+
+    &__content {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
+    }
+
+    &__footer {
+        padding: $spacing-md;
+        border-top: 1px solid $border-subtle;
+        background: rgba(15, 23, 42, 0.4);
+    }
+}
+
+.challenge-info {
+    margin-bottom: 2rem;
+
+    &__label {
+        font-size: 0.625rem;
+        font-weight: 900;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-bottom: 1rem;
+    }
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+    }
+
+    &__desc {
+        font-size: 0.875rem;
+        color: $text-secondary;
+        line-height: 1.625;
+    }
+}
+
+.requirements-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    li {
+        display: flex;
+        gap: 0.75rem;
+        font-size: 0.875rem;
+        color: #cbd5e1; // slate-300
+
+        span {
+            color: $accent-green;
+            font-family: $font-family-mono;
+            font-weight: 700;
+        }
+    }
+}
+
+.hint-box {
+    background: linear-gradient(135deg, rgba($accent-orange, 0.2), transparent);
+    border: 1px solid rgba($accent-orange, 0.2);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-top: 2rem;
+    animation: fadeIn 0.5s ease-out;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+        color: #fb923c; // orange-400
+        font-size: 0.625rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    &__text {
+        font-size: 0.875rem;
+        font-style: italic;
+        color: #e2e8f0; // slate-200
+        line-height: 1.625;
+    }
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    border: 1px solid $border-subtle;
+    background: transparent;
+    color: $text-primary;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    @include flex-center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+        border-color: rgba($accent-orange, 0.5);
+        background: rgba($accent-orange, 0.05);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+// Workspace
+.workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.editor-toolbar {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    background: $bg-dark;
+    border-bottom: 1px solid $border-subtle;
+
+    &__left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__file {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.625rem;
+        font-weight: 700;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+
+        svg {
+            color: $accent-orange;
+        }
+    }
+
+    &__theme-toggles {
+        display: flex;
+        align-items: center;
+        background: $bg-footer;
+        border: 1px solid $border-subtle;
+        border-radius: 0.375rem;
+        padding: 0.125rem;
+
+        button {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            border-radius: 0.25rem;
+            color: #475569; // slate-600
+
+            &:hover {
+                color: $text-secondary;
+            }
+
+            &.active {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+}
+
+.btn-execute {
+    background: linear-gradient(135deg, $accent-orange, #ea580c);
+    color: white;
+    padding: 0.375rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    @include flex-center;
+    gap: 0.5rem;
+    transition: opacity 0.2s;
+
+    &:hover:not(:disabled) {
+        opacity: 0.9;
+    }
+
+    &:disabled {
+        opacity: 0.5;
+    }
+}
+
+.editor-area {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    background-color: var(--editor-bg);
+    transition: background-color 0.5s;
+
+    &__gutters {
+        width: 2.5rem;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 1.5rem;
+        font-size: 0.625rem;
+        font-family: $font-family-mono;
+        user-select: none;
+        color: #334155; // slate-700
+    }
+
+    &__input {
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+    }
+}
+
+// Resizer
+.resizer {
+    height: 0.25rem;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: ns-resize;
+    position: relative;
+    z-index: 30;
+    transition: background 0.2s;
+
+    &:hover,
+    &.resizing {
+        background: rgba($accent-orange, 0.5);
+    }
+
+    &__handle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 2rem;
+        height: 0.25rem;
+        border-radius: 9999px;
+        background: $accent-orange;
+        opacity: 0;
+        transition: opacity 0.2s;
+
+        .resizer:hover &,
+        .resizer.resizing & {
+            opacity: 1;
+        }
+    }
+}
+
+// Results Panel
+.results-panel {
+    display: flex;
+    flex-direction: column;
+    background: #111318;
+    border-top: 1px solid $border-subtle;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+
+    &__tabs {
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-bottom: 1px solid $border-subtle;
+
+        button {
+            padding: 1rem 1.5rem;
+            font-size: 0.625rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid transparent;
+            color: $text-muted;
+            transition: all 0.2s;
+
+            &:hover {
+                color: #cbd5e1;
+            }
+
+            &.active-results {
+                border-color: $accent-orange;
+                color: $accent-orange;
+            }
+
+            &.active-schema {
+                border-color: $accent-green;
+                color: $accent-green;
+            }
+        }
+    }
+
+    &__content {
+        flex: 1;
+        overflow: auto;
+        padding: 1.5rem;
+    }
+}
+
+.results-empty {
+    height: 100%;
+    @include flex-center;
+    flex-direction: column;
+    color: #334155; // slate-700
+
+    p {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 1rem;
+    }
+}
+
+.results-success {
+
+    &__header {
+        @include flex-between;
+        margin-bottom: 1rem;
+        font-size: 0.625rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: $text-muted;
+    }
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+
+    th {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        color: $text-secondary;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-right: 1px solid $border-subtle;
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    td {
+        padding: 0.75rem 1rem;
+        border-top: 1px solid $border-subtle;
+        border-right: 1px solid $border-subtle;
+        color: #cbd5e1; // slate-300
+        font-family: $font-family-mono;
+        vertical-align: top;
+
+        &:last-child {
+            border-right: none;
+        }
+    }
+
+    tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+}
+
+// Prism Overrides controlled by container variables
+.prism-editor-textarea {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    resize: none;
+    background: transparent;
+    color: transparent;
+    caret-color: white;
+    z-index: 10;
+    padding: 1.5rem;
+    font-family: $font-family-mono;
+    font-size: 0.875rem; // 14px
+    line-height: 1.5;
+    border: none;
+    outline: none;
+}
+
+.prism-editor-pre {
+    margin: 0;
+    padding: 1.5rem;
+    font-family: $font-family-mono;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    pointer-events: none;
+    min-height: 100%;
+
+    code {
+        color: var(--editor-text) !important;
+        text-shadow: none !important;
+    }
+}

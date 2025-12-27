@@ -1,0 +1,237 @@
+@use 'variables';
+@use 'base';
+@use 'assignment-list';
+@use 'assignment-attempt';
+@use 'landing';
+@use 'auth';
+
+
+
+
+// Layout
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+// Header
+.app-header {
+    @include base.glass-panel;
+    height: 4rem; // 16 * 0.25rem
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: variables.$z-header;
+    @include base.flex-between;
+
+    &__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+
+        &:hover .app-header__logo {
+            transform: rotate(12deg);
+        }
+    }
+
+    &__logo {
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 0.75rem;
+        background: linear-gradient(135deg, variables.$accent-orange, #ea580c);
+        color: white;
+        font-weight: 900;
+        @include base.flex-center;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+
+        span {
+            background: linear-gradient(to right, variables.$accent-white, variables.$text-secondary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            // text-transparent is tricky in SCSS without prefix, usually simple color is safe or standard clip
+            color: variables.$accent-orange;
+        }
+    }
+}
+
+.nav-menu {
+    display: none; // hidden md:flex
+
+    @media (min-width: 768px) {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    &__item {
+        font-size: 0.625rem; // 10px
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: variables.$text-secondary;
+        transition: color 0.2s;
+
+        &:hover,
+        &--active {
+            color: variables.$accent-orange;
+        }
+    }
+
+    &__divider {
+        height: 1rem; // not 1px width
+        width: 1px;
+        background: variables.$border-subtle;
+    }
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+
+    &__info {
+        text-align: right;
+        display: none;
+
+        @media (min-width: 1024px) {
+            display: block; // lg:block
+        }
+    }
+
+    &__name {
+        font-size: 0.625rem;
+        font-weight: 900;
+    }
+
+    &__role {
+        font-size: 0.5rem;
+        font-weight: 700;
+        color: variables.$text-muted;
+        text-transform: uppercase;
+    }
+
+    &__avatar {
+        height: 2.25rem;
+        width: 2.25rem;
+        border-radius: 9999px;
+        background: variables.$bg-card;
+        border: 1px solid variables.$border-subtle;
+        @include base.flex-center;
+        transition: all 0.2s;
+
+        &:hover {
+            border-color: rgba(variables.$accent-orange, 0.5);
+        }
+
+        span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fb923c; // orange-400
+        }
+    }
+}
+
+// Main
+.app-main {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+// Background Effects
+.bg-glow {
+    position: absolute;
+    width: 40%;
+    height: 40%;
+    filter: blur(120px);
+    pointer-events: none;
+    opacity: 0.05;
+
+    &--orange {
+        top: -10%;
+        left: -10%;
+        background: variables.$accent-orange;
+    }
+
+    &--green {
+        bottom: -10%;
+        right: -10%;
+        background: variables.$accent-green;
+    }
+}
+
+// Footer
+.app-footer {
+    height: 2rem; // 8 * 0.25
+    border-top: 1px solid variables.$border-subtle;
+    background: variables.$bg-footer;
+    padding: 0 1.5rem;
+    @include base.flex-between;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    color: variables.$text-muted;
+
+    &__status {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    &__indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+
+        .dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            border-radius: 50%;
+            background: variables.$accent-green;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    }
+
+    &__links {
+        display: flex;
+        gap: 1rem;
+
+        span {
+            cursor: pointer;
+            transition: color 0.2s;
+
+            &:hover {
+                color: variables.$accent-orange;
+            }
+
+            &:last-child:hover {
+                color: variables.$accent-green;
+            }
+        }
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .5;
+    }
+}

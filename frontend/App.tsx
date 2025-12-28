@@ -1,91 +1,32 @@
+
 import React, { useState, useEffect } from 'react';
-import { api } from './services/api';
-import { Assignment, UserStats } from './types';
+import { ASSIGNMENTS } from './constants';
 import AssignmentList from './components/AssignmentList';
 import AssignmentAttempt from './components/AssignmentAttempt';
-// LandingPage removed
+import LandingPage from './components/LandingPage';
 import AuthPage from './components/AuthPage';
-import ProfileView from './components/ProfileView';
-import SettingsView from './components/SettingsView';
 
-type ViewState = 'landing' | 'auth_login' | 'auth_signup' | 'dashboard' | 'attempt' | 'settings' | 'profile';
+type ViewState = 'landing' | 'auth_login' | 'auth_signup' | 'dashboard' | 'attempt';
 
 const App: React.FC = () => {
-  // Check for persisted user or default to login
-  const [view, setView] = useState<ViewState>(() => {
-    const savedUser = localStorage.getItem('sql_user');
-    return savedUser ? 'dashboard' : 'auth_login';
-  });
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<ViewState>('landing');
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
-  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [user, setUser] = useState<{ name: string; role: string; email: string } | null>(() => {
-    const saved = localStorage.getItem('sql_user');
-    return saved ? JSON.parse(saved) : null;
-  });
-  const [userStats, setUserStats] = useState<UserStats | null>(null);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
-  const fetchUserStats = async (email: string) => {
-    try {
-      const cleanEmail = email.trim();
-      const stats = await api.get(`/user/stats/${cleanEmail}`);
-      setUserStats(stats);
-    } catch (err) {
-      console.error('Failed to fetch user stats:', err);
-    }
-  };
+  const selectedIndex = ASSIGNMENTS.findIndex(a => a.id === selectedAssignmentId);
+  const selectedAssignment = selectedIndex !== -1 ? ASSIGNMENTS[selectedIndex] : null;
 
-  useEffect(() => {
-    const fetchAssignments = async () => {
-      try {
-        const data = await api.get('/assignments');
-        setAssignments(data);
-      } catch (err) {
-        console.error('Failed to load assignments:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAssignments();
-  }, []);
-
-  const selectedIndex = assignments.findIndex(a => a.id === selectedAssignmentId);
-  const selectedAssignment = selectedIndex !== -1 ? assignments[selectedIndex] : null;
-
-  const handleLoginSuccess = (name: string, email: string) => {
-    const userData = {
-      name,
-      role: 'Pro Member',
-      email: email || `${name.toLowerCase().replace(/\s+/g, '.')}@example.com`
-    };
-    setUser(userData);
-    localStorage.setItem('sql_user', JSON.stringify(userData));
-    fetchUserStats(userData.email);
+  const handleLoginSuccess = () => {
     setView('dashboard');
   };
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
-
-  const handleUpdateUser = (name: string, email: string) => {
-    if (user) {
-      setUser({ ...user, name, email });
-    }
-  };
-
   const handleLogout = () => {
-    localStorage.removeItem('sql_user');
-    setView('auth_login');
-    setUser(null);
+    setView('landing');
     setSelectedAssignmentId(null);
   };
 
   const handleNextAssignment = () => {
-    if (selectedIndex !== -1 && selectedIndex < assignments.length - 1) {
-      setSelectedAssignmentId(assignments[selectedIndex + 1].id);
+    if (selectedIndex !== -1 && selectedIndex < ASSIGNMENTS.length - 1) {
+      setSelectedAssignmentId(ASSIGNMENTS[selectedIndex + 1].id);
     } else {
       setSelectedAssignmentId(null);
       setView('dashboard');
@@ -97,16 +38,18 @@ const App: React.FC = () => {
     setView('attempt');
   };
 
-  const handleAssignmentComplete = () => {
-    if (user?.email) fetchUserStats(user.email);
-  };
-
   const backToDashboard = () => {
     setSelectedAssignmentId(null);
     setView('dashboard');
   };
 
-  // Landing Page logic removed
+  // Render Logic
+  if (view === 'landing') {
+    return <LandingPage
+      onLogin={() => setView('auth_login')}
+      onSignup={() => setView('auth_signup')}
+    />;
+  }
 
   if (view === 'auth_login' || view === 'auth_signup') {
     return <AuthPage
@@ -116,92 +59,76 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className={`app-container ${theme === 'light' ? 'light-mode' : ''}`}>
-      <header className="app-header">
-        <div className="app-header__brand" onClick={backToDashboard}>
-          <div className="app-header__logo">C</div>
-          <h1 className="app-header__title">
-            Cipher<span>SQL</span>Studio
+    <div className="min-h-screen flex flex-col bg-[#0c0e12] text-slate-100 overflow-hidden font-['Inter']">
+      {/* Header */}
+      <header className="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-slate-900/20 backdrop-blur-xl sticky top-0 z-50">
+        <div className="flex items-center gap-3 cursor-pointer group" onClick={backToDashboard}>
+          <div className="w-9 h-9 theme-gradient rounded-xl flex items-center justify-center font-black text-white shadow-lg transform group-hover:rotate-12 transition-transform">
+            C
+          </div>
+          <h1 className="text-xl font-extrabold tracking-tight">
+            Cipher<span className="theme-text-gradient">SQL</span>Studio
           </h1>
         </div>
 
-        <nav className="nav-menu">
+        <nav className="hidden md:flex items-center gap-8">
           <button
             onClick={backToDashboard}
-            className={`nav-menu__item ${view === 'dashboard' ? 'nav-menu__item--active' : ''}`}
+            className={`text-[10px] font-black uppercase tracking-widest transition-colors ${view === 'dashboard' ? 'text-green-500' : 'text-slate-400 hover:text-green-500'}`}
           >
             Dashboard
           </button>
-        </nav>
+          <button className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-green-500 transition-colors">Progress</button>
+          <button className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-red-500 transition-colors">Community</button>
 
-        <div className="nav-actions">
-          <button className="theme-toggle" onClick={toggleTheme} title="Toggle Theme">
-            {theme === 'dark' ? '🌙' : '☀️'}
-          </button>
-          <div className="nav-menu__divider" />
-          <div className="user-profile-container">
-            <div className="user-profile group" onClick={() => setShowProfileDropdown(!showProfileDropdown)}>
-              <div className="user-profile__info">
-                <div className="user-profile__name">{user?.name || 'Guest'}</div>
-                <div className="user-profile__role">{user?.role || 'Free Member'}</div>
-              </div>
-              <div className="user-profile__avatar">
-                <span>{user?.name ? user.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'G'}</span>
-              </div>
+          <div className="h-px w-8 bg-white/10" />
+
+          <div className="flex items-center gap-3 group cursor-pointer" onClick={handleLogout}>
+            <div className="text-right hidden lg:block">
+              <div className="text-[10px] font-black text-white">John Smith</div>
+              <div className="text-[8px] font-bold text-slate-500 uppercase">Pro Member</div>
             </div>
-
-            {showProfileDropdown && (
-              <div className="profile-dropdown">
-                <button className="profile-dropdown__item" onClick={() => { setView('profile'); setShowProfileDropdown(false); }}>
-                  View Profile
-                </button>
-                <button className="profile-dropdown__item" onClick={() => { setView('settings'); setShowProfileDropdown(false); }}>
-                  Settings
-                </button>
-                <div className="profile-dropdown__divider" />
-                <button className="profile-dropdown__item profile-dropdown__item--logout" onClick={handleLogout}>
-                  Logout
-                </button>
-              </div>
-            )}
+            <div className="h-9 w-9 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center shadow-inner group-hover:border-red-500/50 transition-all">
+              <span className="text-xs font-bold text-red-400">JS</span>
+            </div>
           </div>
-        </div>
+        </nav>
       </header>
 
-      <main className="app-main">
-        <div className="bg-glow bg-glow--orange" />
-        <div className="bg-glow bg-glow--green" />
+      <main className="flex-1 overflow-hidden relative">
+        {/* Background Glows */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-500/5 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-500/5 blur-[120px] pointer-events-none" />
 
         {view === 'attempt' && selectedAssignment ? (
           <AssignmentAttempt
             assignment={selectedAssignment}
             onBack={backToDashboard}
             onNext={handleNextAssignment}
-            isLast={selectedIndex === assignments.length - 1}
-            userEmail={user?.email}
-          />
-        ) : view === 'profile' ? (
-          <ProfileView
-            user={{ ...user!, role: userStats?.rank || user!.role }}
-            stats={userStats}
-            onBack={backToDashboard}
-          />
-        ) : view === 'settings' ? (
-          <SettingsView
-            user={user}
-            onUpdateUser={handleUpdateUser}
-            onBack={backToDashboard}
+            isLast={selectedIndex === ASSIGNMENTS.length - 1}
           />
         ) : (
           <AssignmentList
-            assignments={assignments}
+            assignments={ASSIGNMENTS}
             onSelectAssignment={selectAssignment}
-            userName={user?.name}
-            stats={userStats}
           />
         )}
       </main>
 
+      <footer className="h-8 border-t border-white/5 flex items-center justify-between px-6 bg-slate-950/80 text-[10px] text-slate-500 uppercase tracking-widest font-bold">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            System Ready
+          </div>
+          <div className="text-slate-700">|</div>
+          <div>PostgreSQL 15.2 (Simulated)</div>
+        </div>
+        <div className="flex gap-4">
+          <span className="hover:text-green-500 cursor-pointer transition-colors">Documentation</span>
+          <span className="hover:text-red-500 cursor-pointer transition-colors">Privacy Policy</span>
+        </div>
+      </footer>
     </div>
   );
 };

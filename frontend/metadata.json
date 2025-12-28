@@ -1,0 +1,5 @@
+{
+  "name": "CipherSQLStudio",
+  "description": "A professional browser-based SQL learning platform featuring real-time query execution, assignment management, and intelligent LLM-powered hints.",
+  "requestFramePermissions": []
+}

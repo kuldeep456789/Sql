@@ -12,15 +12,6 @@ export interface TableSchema {
   sampleData: Record<string, any>[];
 }
 
-export interface UserStats {
-  solvedCount: number;
-  xp: number;
-  rank: string;
-  streak: number;
-  history: { date: string; count: number }[];
-  progress: number;
-}
-
 export interface Assignment {
   id: string;
   title: string;

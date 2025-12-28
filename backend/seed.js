@@ -16,14 +16,14 @@ const CONSTANTS_DATA = [
         difficulty: 'Beginner',
         description: 'Help the marketing team get a list of all active users from specific regions.',
         requirements: [
-            'Select the first name, last name, and email of all users.',
-            'Only include users from the city "London".',
+            'Select the first name, last name, and email of all contacts.',
+            'Only include contacts from the city "London".',
             'Order the results by last name alphabetically.'
         ],
-        initialQuery: 'SELECT * FROM users;',
+        initialQuery: 'SELECT * FROM contacts;',
         schemas: [
             {
-                tableName: 'users',
+                tableName: 'contacts',
                 columns: [
                     { name: 'id', type: 'INTEGER' },
                     { name: 'firstname', type: 'VARCHAR' },
@@ -161,7 +161,11 @@ async function seed() {
         console.log('Starting seed...');
 
         await pool.query(`
-            CREATE TABLE IF NOT EXISTS assignments (
+            DROP TABLE IF EXISTS attempts CASCADE;
+            DROP TABLE IF EXISTS users CASCADE;
+            DROP TABLE IF EXISTS assignments CASCADE;
+
+            CREATE TABLE assignments (
                 id TEXT PRIMARY KEY,
                 title TEXT NOT NULL,
                 difficulty TEXT NOT NULL,
@@ -179,7 +183,7 @@ async function seed() {
                 ) STORED
             );
 
-            CREATE TABLE IF NOT EXISTS users (
+            CREATE TABLE users (
                 id SERIAL PRIMARY KEY,
                 name TEXT NOT NULL,
                 email TEXT UNIQUE NOT NULL,
@@ -188,7 +192,7 @@ async function seed() {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
-            CREATE TABLE IF NOT EXISTS attempts (
+            CREATE TABLE attempts (
                 id SERIAL PRIMARY KEY,
                 user_email TEXT NOT NULL,
                 assignment_id TEXT NOT NULL,

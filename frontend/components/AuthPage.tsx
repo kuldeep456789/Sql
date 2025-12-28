@@ -18,10 +18,10 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, initialMode }) => {
     e.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
-      setIsLoading(false);
-      onLoginSuccess(formData.name || 'User', formData.email);
-    }, 1000);
+    // Simulate API call delay if needed, but for now execute directly to ensure state updates
+    // In a real app, this would be await api.login(...)
+    onLoginSuccess(formData.name || 'User', formData.email);
+    // Loading state will be unmounted so no need to set false
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

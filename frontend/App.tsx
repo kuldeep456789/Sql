@@ -3,7 +3,7 @@ import { api } from './services/api';
 import { Assignment, UserStats } from './types';
 import AssignmentList from './components/AssignmentList';
 import AssignmentAttempt from './components/AssignmentAttempt';
-import LandingPage from './components/LandingPage';
+// LandingPage removed
 import AuthPage from './components/AuthPage';
 import ProfileView from './components/ProfileView';
 import SettingsView from './components/SettingsView';
@@ -11,15 +11,18 @@ import SettingsView from './components/SettingsView';
 type ViewState = 'landing' | 'auth_login' | 'auth_signup' | 'dashboard' | 'attempt' | 'settings' | 'profile';
 
 const App: React.FC = () => {
-  const [view, setView] = useState<ViewState>('landing');
+  // Check for persisted user or default to login
+  const [view, setView] = useState<ViewState>(() => {
+    const savedUser = localStorage.getItem('sql_user');
+    return savedUser ? 'dashboard' : 'auth_login';
+  });
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [user, setUser] = useState<{ name: string; role: string; email: string } | null>({
-    name: 'Guest',
-    role: 'Free Member',
-    email: 'guest@example.com'
+  const [user, setUser] = useState<{ name: string; role: string; email: string } | null>(() => {
+    const saved = localStorage.getItem('sql_user');
+    return saved ? JSON.parse(saved) : null;
   });
   const [userStats, setUserStats] = useState<UserStats | null>(null);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
@@ -52,12 +55,14 @@ const App: React.FC = () => {
   const selectedAssignment = selectedIndex !== -1 ? assignments[selectedIndex] : null;
 
   const handleLoginSuccess = (name: string, email: string) => {
-    setUser({
+    const userData = {
       name,
       role: 'Pro Member',
       email: email || `${name.toLowerCase().replace(/\s+/g, '.')}@example.com`
-    });
-    fetchUserStats(email || `${name.toLowerCase().replace(/\s+/g, '.')}@example.com`);
+    };
+    setUser(userData);
+    localStorage.setItem('sql_user', JSON.stringify(userData));
+    fetchUserStats(userData.email);
     setView('dashboard');
   };
 
@@ -72,7 +77,9 @@ const App: React.FC = () => {
   };
 
   const handleLogout = () => {
-    setView('landing');
+    localStorage.removeItem('sql_user');
+    setView('auth_login');
+    setUser(null);
     setSelectedAssignmentId(null);
   };
 
@@ -99,12 +106,7 @@ const App: React.FC = () => {
     setView('dashboard');
   };
 
-  if (view === 'landing') {
-    return <LandingPage
-      onLogin={() => setView('auth_login')}
-      onSignup={() => setView('auth_signup')}
-    />;
-  }
+  // Landing Page logic removed
 
   if (view === 'auth_login' || view === 'auth_signup') {
     return <AuthPage

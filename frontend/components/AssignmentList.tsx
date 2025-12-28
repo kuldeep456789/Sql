@@ -44,11 +44,10 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
         </div>
 
         <div className="section-header">
-          <h3 className="section-header__title">Core Curriculum</h3>
+          <h3 className="section-header__title">Curriculum</h3>
           <div className="section-header__actions">
             <button className="section-header__filter section-header__filter--active">All</button>
             <button className="section-header__filter section-header__filter--inactive">Queries</button>
-            <button className="section-header__filter section-header__filter--inactive">Joins</button>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface LandingPageProps {
   onLogin: () => void;
@@ -7,6 +7,20 @@ interface LandingPageProps {
 }
 
 const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const slides = [
+    { src: '/images/preview_dashboard.png', label: 'Interactive Dashboard' },
+    { src: '/images/preview_editor.png', label: 'Advanced SQL Editor' },
+    { src: '/images/preview_schema.png', label: 'Schema Visualizer' }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
   return (
     <div className="min-h-screen bg-[#050608] flex flex-col items-center overflow-x-hidden font-['Inter']">
       {/* Background Lighting */}
@@ -28,14 +42,11 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
 
       <main className="w-full max-w-7xl px-8 flex flex-col items-center pt-24 pb-32 z-10 text-center">
 
-
         {/* Hero Text */}
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 leading-[1.1] animate-in fade-in slide-in-from-bottom-6 duration-1000">
-          Precision Engineering <br />
-          For <span className="theme-text-gradient">SQL Masters.</span>
+          CipherSchool <br />
+          For <span className="theme-text-gradient">SQLEditor.</span>
         </h1>
-
-
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row items-center gap-6 mb-24 animate-in fade-in slide-in-from-bottom-10 duration-1000">
@@ -55,84 +66,38 @@ const LandingPage: React.FC<LandingPageProps> = ({ onLogin, onSignup }) => {
           </button>
         </div>
 
-        {/* Product Preview Mockup */}
-        <div className="relative w-full max-w-5xl group animate-in fade-in duration-1000 delay-300 transition-all duration-700 hover:scale-90 cursor-pointer">
-          {/* Outer Shadow/Glow */}
-          <div className="absolute -inset-1 theme-gradient blur-2xl opacity-10 group-hover:opacity-20 transition-opacity duration-700" />
-
-          <div className="relative bg-[#0d0f14] border border-white/10 rounded-[40px] shadow-2xl overflow-hidden aspect-[16/10] md:aspect-[16/8] glass-morphism animate-float">
-            {/* Window Header */}
-            <div className="h-12 border-b border-white/5 flex items-center px-6 gap-2">
-              <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
-                <div className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
-              </div>
-              <div className="flex-1 flex justify-center">
-                <div className="bg-black/40 px-6 py-1 rounded-full border border-white/5 text-[10px] font-bold text-slate-500 tracking-widest flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-                  ciphersql.studio/main_v1.sql
+        {/* Product Preview Slider */}
+        <div className="w-full max-w-5xl relative group animate-in fade-in duration-1000 delay-300">
+          <div className="relative aspect-video rounded-[32px] md:rounded-[48px] overflow-hidden border border-white/10 bg-[#0d0f14] shadow-2xl transition-all duration-700 hover:scale-90 cursor-pointer">
+            {slides.map((img, i) => (
+              <div
+                key={i}
+                className={`absolute inset-0 transition-all duration-1000 ease-in-out ${i === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+                  }`}
+              >
+                <img
+                  src={img.src}
+                  alt={img.label}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-8 md:p-12 text-left">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-green-500 mb-2">Live Experience</span>
+                  <h3 className="text-xl md:text-2xl font-black text-white">{img.label}</h3>
                 </div>
               </div>
-            </div>
+            ))}
+          </div>
 
-            {/* Window Content Split */}
-            <div className="flex h-full">
-              {/* Sidebar Mock */}
-              <div className="w-16 md:w-48 border-r border-white/5 flex flex-col p-4 gap-4 bg-black/20">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="h-2 w-full bg-white/5 rounded-full" />
-                ))}
-              </div>
-
-              {/* Editor Mock */}
-              <div className="flex-1 p-8 text-left code-font">
-                <div className="flex flex-col gap-3">
-                  <div className="flex gap-4">
-                    <span className="text-red-500">SELECT</span>
-                    <span className="text-slate-300">u.first_name, u.email, o.total</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <span className="text-red-500">FROM</span>
-                    <span className="text-slate-300">users u</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <span className="text-red-500">JOIN</span>
-                    <span className="text-slate-300">orders o </span>
-                    <span className="text-red-500">ON</span>
-                    <span className="text-slate-300">u.id = o.user_id</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <span className="text-red-500">WHERE</span>
-                    <span className="text-slate-300">o.status = </span>
-                    <span className="text-green-500">'COMPLETED'</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <span className="text-red-500">LIMIT</span>
-                    <span className="text-blue-400">100</span>;
-                  </div>
-
-                  <div className="mt-8 pt-8 border-t border-white/5">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Query Results</span>
-                      <span className="text-[10px] font-black uppercase text-green-500 tracking-widest">Done • 12ms</span>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <div className="h-6 w-full bg-white/5 rounded-lg flex items-center px-3 gap-4">
-                        <div className="h-2 w-12 bg-white/10 rounded" />
-                        <div className="h-2 w-32 bg-white/10 rounded" />
-                        <div className="h-2 w-8 bg-green-500/20 rounded" />
-                      </div>
-                      <div className="h-6 w-full bg-white/5 rounded-lg flex items-center px-3 gap-4">
-                        <div className="h-2 w-12 bg-white/10 rounded" />
-                        <div className="h-2 w-32 bg-white/10 rounded" />
-                        <div className="h-2 w-8 bg-green-500/20 rounded" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* Slider Indicators */}
+          <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex gap-3">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                className={`w-2 h-2 rounded-full transition-all duration-500 ${i === currentSlide ? 'w-8 bg-white' : 'bg-white/20'
+                  }`}
+              />
+            ))}
           </div>
         </div>
       </main>

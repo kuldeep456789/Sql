@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import pg from 'pg';
+import bcrypt from 'bcrypt';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
@@ -45,9 +46,13 @@ app.get('/api/assignments', async (req, res) => {
 app.post('/api/auth/register', async (req, res) => {
     const { name, email, password } = req.body;
     try {
+        // Hash password before storing
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
         const result = await pool.query(
             'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email, role',
-            [name, email, password]
+            [name, email, hashedPassword]
         );
         res.status(201).json(result.rows[0]);
     } catch (err) {
@@ -61,14 +66,27 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     try {
+        // Fetch user with password hash
         const result = await pool.query(
-            'SELECT id, name, email, role FROM users WHERE email = $1 AND password = $2',
-            [email, password]
+            'SELECT id, name, email, role, password FROM users WHERE email = $1',
+            [email]
         );
+
         if (result.rows.length === 0) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
-        res.json(result.rows[0]);
+
+        // Verify password using bcrypt
+        const user = result.rows[0];
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
+
+        // Remove password from response
+        const { password: _, ...userWithoutPassword } = user;
+        res.json(userWithoutPassword);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

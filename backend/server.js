@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import pg from 'pg';
 import bcrypt from 'bcrypt';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+
 
 dotenv.config();
 
@@ -173,85 +173,9 @@ app.get('/api/user/stats/:email', async (req, res) => {
 });
 
 app.post('/api/hint', async (req, res) => {
-    try {
-        const { assignmentContext, currentQuery } = req.body;
-        console.log('--- HINT REQUEST ---');
-        console.log('Target Assignment:', assignmentContext?.title);
-
-        if (!assignmentContext) {
-            return res.status(400).json({ error: 'Missing assignment context' });
-        }
-
-        if (!process.env.GEMINI_API_KEY ||
-            process.env.GEMINI_API_KEY === 'your_gemini_api_key' ||
-            process.env.GEMINI_API_KEY === 'your_gemini_api_key_here') {
-            return res.status(503).json({
-                hint: "AI assistance is currently disabled. Please provide a valid GEMINI_API_KEY in the backend .env file."
-            });
-        }
-
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-        const reqs = Array.isArray(assignmentContext.requirements)
-            ? assignmentContext.requirements.join(', ')
-            : 'No specific requirements';
-
-        const prompt = `
-            You are an expert SQL tutor. Provide a helpful, conceptual hint for a student struggling with a SQL challenge.
-            
-            Challenge Title: ${assignmentContext.title}
-            Description: ${assignmentContext.description}
-            Requirements: ${reqs}
-            
-            Student's Current Query:
-            \`\`\`sql
-            ${currentQuery || '-- No query started yet'}
-            \`\`\`
-            
-            GUIDELINES:
-            1. DO NOT provide the full solution code.
-            2. Point out specific syntax errors or logical gaps.
-            3. Explain concepts (e.g., 'You might need a LEFT JOIN instead of an INNER JOIN').
-            4. Keep the response concise (max 3 sentences).
-        `;
-
-        let hint;
-        try {
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-            console.log('Generating with gemini-1.5-flash...');
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            hint = response.text();
-        } catch (flashError) {
-            if (flashError.status === 404 || flashError.message?.includes('404')) {
-                console.warn('gemini-1.5-flash not found, falling back to gemini-1.5-pro...');
-                const modelPro = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-                const result = await modelPro.generateContent(prompt);
-                const response = await result.response;
-                hint = response.text();
-            } else {
-                throw flashError;
-            }
-        }
-
-        if (!hint) {
-            throw new Error('Gemini returned an empty response');
-        }
-
-        console.log('Hint generated successfully');
-        res.json({ hint });
-    } catch (err) {
-        console.error('FINAL Gemini Error:', {
-            message: err.message,
-            status: err.status,
-            stack: err.stack?.substring(0, 200)
-        });
-        res.status(500).json({
-            error: 'Failed to generate hint',
-            details: err.message
-        });
-    }
+    res.status(200).json({
+        hint: "AI hint feature is currently disabled."
+    });
 });
 
 process.on('unhandledRejection', (reason, promise) => {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Assignment, QueryResult } from '../types';
 import { executeQuery } from '../services/dbService';
-import { getSqlHint } from '../services/geminiService';
 import Editor from '@monaco-editor/react';
 
 interface AssignmentAttemptProps {
@@ -47,8 +46,7 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
 
   const handleGetHint = async () => {
     setIsGettingHint(true);
-    const h = await getSqlHint(assignment, query);
-    setHint(h);
+    setHint("AI hint feature is currently disabled.");
     setIsGettingHint(false);
   };
 

@@ -24,7 +24,6 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
   const [isExecuting, setIsExecuting] = useState(false);
   const [editorTheme, setEditorTheme] = useState<EditorTheme>('cyberpunk');
 
-  // Resizing state
   const [resultsHeight, setResultsHeight] = useState(40); // Initial 40% height for results
   const [isResizing, setIsResizing] = useState(false);
 
@@ -32,7 +31,6 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
   const preRef = useRef<HTMLPreElement>(null);
   const workspaceRef = useRef<HTMLDivElement>(null);
 
-  // Reset state when assignment changes
   useEffect(() => {
     setQuery(assignment.initialQuery || '');
     setResult(null);
@@ -57,7 +55,6 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
     setIsGettingHint(false);
   };
 
-  // Sync scrolling between textarea and pre
   const handleScroll = () => {
     if (textareaRef.current && preRef.current) {
       preRef.current.scrollTop = textareaRef.current.scrollTop;
@@ -65,7 +62,6 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
     }
   };
 
-  // Resize logic
   const startResizing = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     setIsResizing(true);
@@ -140,7 +136,6 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
 
   return (
     <div className={`h-full flex flex-col md:flex-row overflow-hidden bg-[#0c0e12] ${themeClasses.prismClass}`}>
-      {/* Sidebar: Instructions */}
       <div className="w-full md:w-[320px] lg:w-[400px] border-r border-white/5 flex flex-col bg-slate-950/50 backdrop-blur-md">
         <div className="p-4 border-b border-white/5 flex items-center justify-between">
           <button
@@ -202,9 +197,7 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
         </div>
       </div>
 
-      {/* Workspace: Editor + Output */}
       <div ref={workspaceRef} className="flex-1 flex flex-col min-w-0">
-        {/* Editor Container */}
         <div className="flex-1 flex flex-col relative min-h-0">
           <div className="h-12 flex items-center justify-between px-4 bg-[#0c0e12] border-b border-white/5">
             <div className="flex items-center gap-4">
@@ -213,7 +206,6 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
                 main.sql
               </div>
 
-              {/* Theme Toggle */}
               <div className="flex items-center bg-slate-950 border border-white/5 rounded-md p-0.5">
                 {(['cyberpunk', 'amber', 'emerald'] as EditorTheme[]).map((t) => (
                   <button
@@ -277,7 +269,6 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
           </div>
         </div>
 
-        {/* DRAGGABLE RESIZER */}
         <div
           onMouseDown={startResizing}
           className={`h-1 cursor-ns-resize transition-colors z-30 group relative ${isResizing ? 'bg-red-500' : 'bg-white/5 hover:bg-red-500/50'}`}
@@ -285,7 +276,6 @@ const AssignmentAttempt: React.FC<AssignmentAttemptProps> = ({ assignment, onBac
           <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] ${isResizing ? 'opacity-100' : ''}`} />
         </div>
 
-        {/* Results / Schema Panel */}
         <div
           className="flex flex-col bg-[#111318] border-t border-white/5 shadow-2xl overflow-hidden"
           style={{ height: `${resultsHeight}%` }}

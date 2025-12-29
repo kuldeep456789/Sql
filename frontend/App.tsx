@@ -43,7 +43,6 @@ const App: React.FC = () => {
     setView('dashboard');
   };
 
-  // Render Logic
   if (view === 'landing') {
     return <LandingPage
       onLogin={() => setView('auth_login')}
@@ -60,7 +59,6 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0c0e12] text-slate-100 overflow-hidden font-['Inter']">
-      {/* Header */}
       <header className="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-slate-900/20 backdrop-blur-xl sticky top-0 z-50">
         <div className="flex items-center gap-3 cursor-pointer group" onClick={backToDashboard}>
           <div className="w-9 h-9 theme-gradient rounded-xl flex items-center justify-center font-black text-white shadow-lg transform group-hover:rotate-12 transition-transform">
@@ -96,7 +94,6 @@ const App: React.FC = () => {
       </header>
 
       <main className="flex-1 overflow-hidden relative">
-        {/* Background Glows */}
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-green-500/5 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-red-500/5 blur-[120px] pointer-events-none" />
 

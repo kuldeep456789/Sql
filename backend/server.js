@@ -47,7 +47,6 @@ app.get('/api/assignments', async (req, res) => {
 app.post('/api/auth/register', async (req, res) => {
     const { name, email, password } = req.body;
     try {
-        // Hash password before storing
         const saltRounds = 10;
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -67,7 +66,6 @@ app.post('/api/auth/register', async (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
     const { email, password } = req.body;
     try {
-        // Fetch user with password hash
         const result = await pool.query(
             'SELECT id, name, email, role, password FROM users WHERE email = $1',
             [email]
@@ -77,7 +75,6 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // Verify password using bcrypt
         const user = result.rows[0];
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -85,7 +82,6 @@ app.post('/api/auth/login', async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        // Remove password from response
         const { password: _, ...userWithoutPassword } = user;
         res.json(userWithoutPassword);
     } catch (err) {

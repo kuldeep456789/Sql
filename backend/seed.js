@@ -81,7 +81,7 @@ const CONSTANTS_DATA = [
             'Only show orders where the total is greater than 500.',
             'Order by amount descending.'
         ],
-        initialQuery: '-- Start your JOIN query here\nSELECT ',
+        initialQuery: 'SELECT ',
         schemas: [
             {
                 tableName: 'customers',

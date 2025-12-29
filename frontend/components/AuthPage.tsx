@@ -51,13 +51,11 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess, initialMode }) => {
 
   return (
     <div className="min-h-screen bg-[#0c0e12] flex items-center justify-center p-6 relative overflow-hidden font-['Inter']">
-      {/* Background Decor */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-green-500/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-red-500/10 blur-[80px] rounded-full pointer-events-none" />
 
       <div className="w-full max-w-md z-10 animate-in fade-in zoom-in-95 duration-500">
         <div className="bg-[#111318] border border-white/5 rounded-[32px] p-8 md:p-12 shadow-2xl relative overflow-hidden">
-          {/* Logo */}
           <div className="flex flex-col items-center mb-10">
             <div className="w-12 h-12 theme-gradient rounded-2xl flex items-center justify-center font-black text-white text-xl shadow-lg mb-4">
               C

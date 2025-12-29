@@ -25,7 +25,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
   return (
     <div className="h-full overflow-y-auto p-6 lg:p-12 scroll-smooth">
       <div className="max-w-7xl mx-auto">
-        {/* Welcome Section */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-8">
           <div className="max-w-2xl">
             <h2 className="text-4xl font-black mb-4 tracking-tight">
@@ -49,7 +48,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
           </div>
         </div>
 
-        {/* Section Header */}
         <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-6">
           <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Core Curriculum</h3>
           <div className="flex gap-2">
@@ -59,7 +57,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
           </div>
         </div>
 
-        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {assignments.map((assignment) => (
             <div
@@ -67,7 +64,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
               onClick={() => onSelectAssignment(assignment.id)}
               className="group relative bg-[#111318] border border-white/5 rounded-3xl p-8 hover:border-green-500/30 hover:glow-green transition-all cursor-pointer flex flex-col overflow-hidden"
             >
-              {/* Card Hover Decoration */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
               <div className="flex items-center justify-between mb-8">
@@ -100,7 +96,6 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
             </div>
           ))}
 
-          {/* Coming Soon Card */}
           <div className="relative bg-slate-900/10 border border-dashed border-white/10 rounded-3xl p-8 flex flex-col items-center justify-center text-center group cursor-not-allowed">
             <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4 text-slate-600">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>

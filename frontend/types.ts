@@ -29,3 +29,17 @@ export interface QueryResult {
   executionTime: number;
   error?: string;
 }
+
+export interface ActivityHistory {
+  date: string;
+  count: number;
+}
+
+export interface UserStats {
+  solvedCount: number;
+  xp: number;
+  rank: string;
+  streak: number;
+  history: ActivityHistory[];
+  progress: number;
+}

@@ -1,10 +1,12 @@
 
 import React from 'react';
-import { Assignment, Difficulty } from '../types';
+import { Assignment, Difficulty, UserStats } from '../types';
 
 interface AssignmentListProps {
   assignments: Assignment[];
   onSelectAssignment: (id: string) => void;
+  user: { name: string } | null;
+  stats: UserStats;
 }
 
 const DifficultyBadge: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) => {
@@ -21,17 +23,17 @@ const DifficultyBadge: React.FC<{ difficulty: Difficulty }> = ({ difficulty }) =
   );
 };
 
-const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAssignment }) => {
+const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAssignment, user, stats }) => {
   return (
     <div className="h-full overflow-y-auto p-6 lg:p-12 scroll-smooth">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-8">
           <div className="max-w-2xl">
             <h2 className="text-4xl font-black mb-4 tracking-tight">
-              Welcome Back, <span className="theme-text-gradient">Explorer</span>
+              Welcome Back, <span className="theme-text-gradient">{user?.name.split(' ')[0] || 'Explorer'}</span>
             </h2>
             <p className="text-slate-400 text-lg leading-relaxed">
-              Your current progress is <span className="text-white font-bold">42%</span> complete.
+              Your current progress is <span className="text-white font-bold">{stats.progress}%</span> complete.
               Continue where you left off or start a new challenge below.
             </p>
           </div>
@@ -39,11 +41,11 @@ const AssignmentList: React.FC<AssignmentListProps> = ({ assignments, onSelectAs
           <div className="flex gap-4">
             <div className="bg-[#111318] border border-white/5 rounded-2xl p-4 flex flex-col min-w-[140px]">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">XP Points</span>
-              <span className="text-xl font-black text-green-500">12,450</span>
+              <span className="text-xl font-black text-green-500">{stats.xp.toLocaleString()}</span>
             </div>
             <div className="bg-[#111318] border border-white/5 rounded-2xl p-4 flex flex-col min-w-[140px]">
               <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Rank</span>
-              <span className="text-xl font-black text-red-500">Novice II</span>
+              <span className="text-xl font-black text-red-500">{stats.rank}</span>
             </div>
           </div>
         </div>
